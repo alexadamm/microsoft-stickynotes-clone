@@ -45,35 +45,113 @@ class _NoteDetail extends State<NoteDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
-          tooltip: 'Back',
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        backgroundColor: primaryColor,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
+            tooltip: 'Back',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(),
+              Icon(Icons.settings, color: primaryColor),
+            ],
+          ),
+          backgroundColor: const Color.fromARGB(255, 230, 185, 4),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(),
-            Icon(Icons.settings, color: primaryColor),
-          ],
-        ),
-        backgroundColor: const Color.fromARGB(255, 230, 185, 4),
-      ),
-    );
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                NoteTitleEntry(_titleTextController),
+                NoteContentEntry(_contentTextController),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
 class NoteTitleEntry extends StatelessWidget {
   final _textFieldController;
 
-  const NoteTitleEntry(this._textFieldController);
+  const NoteTitleEntry(this._textFieldController, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return TextField();
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        child: TextField(
+          controller: _textFieldController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            contentPadding: const EdgeInsets.all(0),
+            counter: null,
+            counterText: "",
+            hintText: 'Title',
+            hintStyle: TextStyle(
+              fontSize: 21,
+              height: 1.5,
+              color: Colors.grey[600],
+            ),
+          ),
+          maxLength: 32,
+          maxLines: 1,
+          style: const TextStyle(
+            fontSize: 20.5,
+            height: 1.5,
+            color: Colors.white,
+          ),
+          textCapitalization: TextCapitalization.words,
+        ));
+  }
+}
+
+class NoteContentEntry extends StatelessWidget {
+  final _textFieldController;
+
+  const NoteContentEntry(this._textFieldController, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        child: TextField(
+          controller: _textFieldController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            contentPadding: const EdgeInsets.all(0),
+            counter: null,
+            counterText: "",
+            hintText: 'Note',
+            hintStyle: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: Colors.grey[600],
+            ),
+          ),
+          maxLines: null,
+          style: const TextStyle(
+            fontSize: 15,
+            height: 1.5,
+            color: Colors.white,
+          ),
+          textCapitalization: TextCapitalization.sentences,
+        ));
   }
 }
