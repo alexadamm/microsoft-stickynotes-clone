@@ -46,6 +46,10 @@ class NotesDatabase {
     return result.first;
   }
 
+  Future<int> deleteNoteById(int id) async {
+    return await database.delete(tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
   closeDatabase() async {
     await database.close();
   }
