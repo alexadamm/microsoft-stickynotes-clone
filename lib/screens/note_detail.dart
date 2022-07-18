@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes/models/database/notes.dart';
+import 'package:notes/models/note.dart';
 
 class NoteDetail extends StatefulWidget {
   const NoteDetail({super.key});
@@ -26,6 +28,42 @@ class _NoteDetail extends State<NoteDetail> {
     setState(() {
       title = _contentTextController.text.trim();
     });
+  }
+
+  void handleBackButton() async {
+    if (title.isEmpty) {
+      // Go back without saving
+      if (content.isEmpty) {
+        Navigator.pop(context);
+        return;
+      }
+
+      // Set content as title
+      String trimmedContent = content.split('\n')[0];
+      if (trimmedContent.length > 32) {
+        trimmedContent = trimmedContent.substring(0, 32);
+        setState(() {
+          title = trimmedContent;
+        });
+      }
+    }
+
+    // Save new note
+    Note note = Note(title: title, content: content);
+    try {
+      await _insertNote(note);
+    } catch (e) {
+      print('Error inserting note');
+    } finally {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _insertNote(Note note) async {
+    NotesDatabase notesDB = new NotesDatabase();
+    await notesDB.initDatabase();
+    int result = await notesDB.insertNote(note);
+    await notesDB.closeDatabase();
   }
 
   @override
