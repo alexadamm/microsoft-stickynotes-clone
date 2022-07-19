@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes/models/database/notes.dart';
 import 'package:notes/models/note.dart';
+import 'package:notes/models/database/notes.dart';
 
 class NoteDetail extends StatefulWidget {
   const NoteDetail({super.key});
@@ -26,7 +26,7 @@ class _NoteDetail extends State<NoteDetail> {
 
   void handleContentTextChange() {
     setState(() {
-      title = _contentTextController.text.trim();
+      content = _contentTextController.text.trim();
     });
   }
 
@@ -53,17 +53,16 @@ class _NoteDetail extends State<NoteDetail> {
     try {
       await _insertNote(note);
     } catch (e) {
-      print('Error inserting note');
+      print(e);
     } finally {
       Navigator.pop(context);
     }
   }
 
-  Future<void> _insertNote(Note note) async {
-    NotesDatabase notesDB = new NotesDatabase();
-    await notesDB.initDatabase();
-    int result = await notesDB.insertNote(note);
-    await notesDB.closeDatabase();
+  Future<int> _insertNote(Note note) async {
+    MyDatabase notesDB = MyDatabase();
+    DbQueries notesQuery = DbQueries(notesDB);
+    return await notesQuery.insertNote(note);
   }
 
   @override
@@ -82,35 +81,38 @@ class _NoteDetail extends State<NoteDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: primaryColor,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
-            tooltip: 'Back',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(),
-              Icon(Icons.settings, color: primaryColor),
-            ],
-          ),
-          backgroundColor: const Color.fromARGB(255, 230, 185, 4),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                NoteTitleEntry(_titleTextController),
-                NoteContentEntry(_contentTextController),
-              ],
+    return WillPopScope(
+        onWillPop: () async {
+          handleBackButton();
+          return true;
+        },
+        child: Scaffold(
+            backgroundColor: primaryColor,
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
+                tooltip: 'Back',
+                onPressed: handleBackButton,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(),
+                  Icon(Icons.settings, color: primaryColor),
+                ],
+              ),
+              backgroundColor: const Color.fromARGB(255, 230, 185, 4),
             ),
-          ),
-        ));
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    NoteTitleEntry(_titleTextController),
+                    NoteContentEntry(_contentTextController),
+                  ],
+                ),
+              ),
+            )));
   }
 }
 
