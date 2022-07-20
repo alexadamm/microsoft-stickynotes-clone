@@ -9,7 +9,6 @@ Future<List<SavedNote>> readDatabase() async {
     List<SavedNote> notesList = await notesQuery.getAllNotes();
     return notesList;
   } catch (e) {
-    print('Error retrieving notes');
     throw Error();
   }
 }
@@ -60,7 +59,7 @@ class _Home extends State<Home> {
         await notesQuery.deleteNoteById(id);
       }
     } catch (e) {
-      print('Error removing row');
+      throw Error();
     } finally {
       setState(() {
         selectedNoteIds = [];
@@ -98,7 +97,8 @@ class _Home extends State<Home> {
           onPressed: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: ((context) => const NoteDetail())),
+              MaterialPageRoute(
+                  builder: (context) => const NoteDetail(['new', {}])),
             )
           },
           child: Icon(Icons.add, color: primaryColor),
@@ -106,7 +106,6 @@ class _Home extends State<Home> {
         body: FutureBuilder(
             future: readDatabase(),
             builder: (context, snapshot) {
-              print(snapshot.data);
               if (snapshot.hasData) {
                 notesData = snapshot.data;
                 return Stack(
@@ -122,7 +121,6 @@ class _Home extends State<Home> {
                   ],
                 );
               } else if (snapshot.hasError) {
-                print('Error reading database');
                 return const Text('Error reading database');
               } else {
                 return Center(
@@ -143,7 +141,7 @@ class _Home extends State<Home> {
 class AllNoteLists extends StatelessWidget {
   final List<SavedNote> data;
   final List<int> selectedNoteIds;
-  final afterNavigatorPop;
+  final VoidCallback afterNavigatorPop;
   final handleNoteListLongPress;
   final handleNoteListTapAfterSelect;
 
@@ -176,7 +174,7 @@ class DisplayNotes extends StatelessWidget {
   final SavedNote notesData;
   final List<int> selectedNoteIds;
   final bool selectedNote;
-  final callAfterNavigatorPop;
+  final VoidCallback callAfterNavigatorPop;
   final handleNoteListLongPress;
   final handleNoteListTapAfterSelect;
 
@@ -202,7 +200,13 @@ class DisplayNotes extends StatelessWidget {
           onTap: () {
             if (selectedNote == false) {
               if (selectedNoteIds.isEmpty) {
-                // Go to edit screen to update notes
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NoteDetail(['update', notesData]),
+                  ),
+                ).then((dynamic value) => callAfterNavigatorPop());
+                return;
               } else {
                 handleNoteListLongPress(notesData.id);
               }

@@ -3,7 +3,8 @@ import 'package:notes/models/note.dart';
 import 'package:notes/models/database/notes.dart';
 
 class NoteDetail extends StatefulWidget {
-  const NoteDetail({super.key});
+  final List args;
+  const NoteDetail(this.args, {super.key});
 
   @override
   _NoteDetail createState() => _NoteDetail();
@@ -42,20 +43,40 @@ class _NoteDetail extends State<NoteDetail> {
       String trimmedContent = content.split('\n')[0];
       if (trimmedContent.length > 32) {
         trimmedContent = trimmedContent.substring(0, 32);
-        setState(() {
-          title = trimmedContent;
-        });
       }
+      setState(() {
+        title = trimmedContent;
+      });
     }
 
     // Save new note
-    Note note = Note(title: title, content: content);
-    try {
-      await _insertNote(note);
-    } catch (e) {
-      print(e);
-    } finally {
-      Navigator.pop(context);
+    if (widget.args[0] == 'new') {
+      Note note = Note(title: title, content: content);
+
+      try {
+        await _insertNote(note);
+      } catch (e) {
+        throw Error();
+      } finally {
+        Navigator.pop(context);
+      }
+    }
+
+    // Update note
+    else if (widget.args[0] == 'update') {
+      Note note = Note(
+        id: widget.args[1].id,
+        title: title,
+        content: content,
+      );
+
+      try {
+        await _updateNote(note);
+      } catch (e) {
+        throw Error();
+      } finally {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -65,9 +86,22 @@ class _NoteDetail extends State<NoteDetail> {
     return await notesQuery.insertNote(note);
   }
 
+  Future<int> _updateNote(Note note) async {
+    MyDatabase notesDB = MyDatabase();
+    DbQueries notesQuery = DbQueries(notesDB);
+    return await notesQuery.updateNoteById(note);
+  }
+
   @override
   void initState() {
     super.initState();
+    title = (widget.args[0] == 'new' ? '' : widget.args[1].title);
+    content = (widget.args[0] == 'new' ? '' : widget.args[1].content);
+
+    _titleTextController.text =
+        (widget.args[0] == 'new' ? '' : widget.args[1].title);
+    _contentTextController.text =
+        (widget.args[0] == 'new' ? '' : widget.args[1].content);
     _titleTextController.addListener(handleTitleTextChange);
     _contentTextController.addListener(handleContentTextChange);
   }
@@ -117,7 +151,7 @@ class _NoteDetail extends State<NoteDetail> {
 }
 
 class NoteTitleEntry extends StatelessWidget {
-  final _textFieldController;
+  final TextEditingController _textFieldController;
 
   const NoteTitleEntry(this._textFieldController, {super.key});
 
@@ -157,7 +191,7 @@ class NoteTitleEntry extends StatelessWidget {
 }
 
 class NoteContentEntry extends StatelessWidget {
-  final _textFieldController;
+  final TextEditingController _textFieldController;
 
   const NoteContentEntry(this._textFieldController, {super.key});
 
