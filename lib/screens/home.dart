@@ -75,6 +75,17 @@ class _Home extends State<Home> {
       home: Scaffold(
         backgroundColor: primaryColor,
         appBar: AppBar(
+          actions: [
+            (selectedNoteIds.isNotEmpty
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: secondaryColor,
+                    ),
+                    tooltip: 'Delete',
+                    onPressed: () => handleDelete())
+                : Container()),
+          ],
           automaticallyImplyLeading: false,
           backgroundColor: primaryColor,
           title: const Text('Notes App'),
