@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes/models/note.dart';
-import 'package:notes/models/database/notes.dart';
+
+import '../models/container.dart';
 
 class NoteDetail extends StatefulWidget {
   final List args;
@@ -81,14 +82,10 @@ class _NoteDetail extends State<NoteDetail> {
   }
 
   Future<int> _insertNote(Note note) async {
-    MyDatabase notesDB = MyDatabase();
-    DbQueries notesQuery = DbQueries(notesDB);
     return await notesQuery.insertNote(note);
   }
 
   Future<int> _updateNote(Note note) async {
-    MyDatabase notesDB = MyDatabase();
-    DbQueries notesQuery = DbQueries(notesDB);
     return await notesQuery.updateNoteById(note);
   }
 

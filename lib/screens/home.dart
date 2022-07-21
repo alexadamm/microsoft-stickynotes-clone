@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:notes/models/container.dart';
 import 'package:notes/models/database/notes.dart';
 import 'package:notes/screens/note_detail.dart';
 
 Future<List<SavedNote>> readDatabase() async {
   try {
-    MyDatabase notesDB = MyDatabase();
-    DbQueries notesQuery = DbQueries(notesDB);
     List<SavedNote> notesList = await notesQuery.getAllNotes();
     return notesList;
   } catch (e) {
@@ -53,8 +52,6 @@ class _Home extends State<Home> {
   // Delete Note/Notes
   void handleDelete() async {
     try {
-      MyDatabase notesDB = MyDatabase();
-      DbQueries notesQuery = DbQueries(notesDB);
       for (int id in selectedNoteIds) {
         await notesQuery.deleteNoteById(id);
       }
