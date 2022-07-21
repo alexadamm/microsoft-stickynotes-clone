@@ -99,7 +99,7 @@ class _Home extends State<Home> {
               context,
               MaterialPageRoute(
                   builder: (context) => const NoteDetail(['new', {}])),
-            )
+            ).then((dynamic value) => afterNavigatorPop())
           },
           child: Icon(Icons.add, color: primaryColor),
         ),
