@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:notes/models/container.dart';
-import 'package:notes/models/database/notes.dart';
+import 'package:notes/core/container.dart';
 import 'package:notes/screens/note_detail.dart';
+
+import '../core/database/notes.dart';
 
 Future<List<SavedNote>> readDatabase() async {
   try {
@@ -84,7 +85,10 @@ class _Home extends State<Home> {
           ],
           automaticallyImplyLeading: false,
           backgroundColor: primaryColor,
-          title: const Text('Notes App'),
+          title: const Text('Notes App',
+              style: TextStyle(
+                color: Color.fromARGB(255, 230, 185, 4),
+              )),
           shadowColor: Colors.transparent,
           elevation: 0,
         ),
@@ -167,6 +171,7 @@ class AllNoteLists extends StatelessWidget {
 class DisplayNotes extends StatelessWidget {
   final primaryColor = const Color(0xFF202020);
   final secondaryColor = const Color.fromARGB(255, 230, 185, 4);
+  final tertiaryColor = const Color.fromARGB(255, 51, 51, 51);
 
   final SavedNote notesData;
   final List<int> selectedNoteIds;
@@ -187,62 +192,47 @@ class DisplayNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-      child: Material(
-        elevation: 1,
-        color: (selectedNote == false ? primaryColor : secondaryColor),
-        clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.circular(5.0),
-        child: InkWell(
-          onTap: () {
-            if (selectedNote == false) {
-              if (selectedNoteIds.isEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NoteDetail(['update', notesData]),
-                  ),
-                ).then((dynamic value) => callAfterNavigatorPop());
-                return;
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+        child: Material(
+          elevation: 4,
+          color: (selectedNote == false ? tertiaryColor : secondaryColor),
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(5.0),
+          child: InkWell(
+            onTap: () {
+              if (selectedNote == false) {
+                if (selectedNoteIds.isEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NoteDetail(['update', notesData]),
+                    ),
+                  ).then((dynamic value) => callAfterNavigatorPop());
+                  return;
+                } else {
+                  handleNoteListLongPress(notesData.id);
+                }
               } else {
-                handleNoteListLongPress(notesData.id);
+                handleNoteListTapAfterSelect(notesData.id);
               }
-            } else {
-              handleNoteListTapAfterSelect(notesData.id);
-            }
-          },
-          onLongPress: () {
-            handleNoteListLongPress(notesData.id);
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: (selectedNote == false
-                              ? primaryColor
-                              : secondaryColor),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Text('$notesData')),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
+            },
+            onLongPress: () {
+              handleNoteListLongPress(notesData.id);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                    top: (selectedNote == false
+                        ? BorderSide(width: 3, color: secondaryColor)
+                        : BorderSide(color: tertiaryColor))),
+              ),
+              child: Card(
+                color: (selectedNote == false
+                    ? Colors.transparent
+                    : tertiaryColor),
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,8 +240,8 @@ class DisplayNotes extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         notesData.title,
-                        style: TextStyle(
-                          color: secondaryColor,
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -261,8 +251,8 @@ class DisplayNotes extends StatelessWidget {
                       ),
                       Text(
                         notesData.content,
-                        style: TextStyle(
-                          color: secondaryColor,
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
                         ),
@@ -270,11 +260,9 @@ class DisplayNotes extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

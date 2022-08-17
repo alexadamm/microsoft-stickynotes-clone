@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes/models/note.dart';
-
-import '../models/container.dart';
+import 'package:notes/core/container.dart';
+import 'package:notes/core/note.dart';
 
 class NoteDetail extends StatefulWidget {
   final List args;
@@ -39,14 +38,8 @@ class _NoteDetail extends State<NoteDetail> {
         Navigator.pop(context);
         return;
       }
-
-      // Set content as title
-      String trimmedContent = content.split('\n')[0];
-      if (trimmedContent.length > 32) {
-        trimmedContent = trimmedContent.substring(0, 32);
-      }
       setState(() {
-        title = trimmedContent;
+        title = 'Untitled';
       });
     }
 

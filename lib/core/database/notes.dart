@@ -6,15 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import '../note.dart';
+import 'tables.dart';
 
 part 'notes.g.dart';
-
-@DataClassName('SavedNote')
-class SavedNotes extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get title => text()();
-  TextColumn get content => text()();
-}
 
 @DriftDatabase(tables: [SavedNotes])
 class MyDatabase extends _$MyDatabase {
