@@ -31,7 +31,7 @@ class _NoteDetail extends State<NoteDetail> {
     });
   }
 
-  void handleBackButton() async {
+  Future<void> handleBackButton() async {
     if (title.isEmpty) {
       // Go back without saving
       if (content.isEmpty) {
@@ -107,7 +107,7 @@ class _NoteDetail extends State<NoteDetail> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          handleBackButton();
+          await handleBackButton();
           return true;
         },
         child: Scaffold(
