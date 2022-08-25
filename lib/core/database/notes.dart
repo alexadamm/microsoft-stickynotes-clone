@@ -39,14 +39,18 @@ class DbQueries extends DatabaseAccessor<MyDatabase> with _$DbQueriesMixin {
   Future<int> insertNote(Note note) async {
     return await into(savedNotes).insert(
       SavedNotesCompanion(
-          title: Value(note.title), content: Value(note.content)),
+          title: Value(note.title),
+          content: Value(note.content),
+          updatedAt: Value(note.updatedAt)),
     );
   }
 
   Future<int> updateNoteById(Note note) async {
     return await (update(savedNotes)..where((t) => t.id.equals(note.id))).write(
       SavedNotesCompanion(
-          title: Value(note.title), content: Value(note.content)),
+          title: Value(note.title),
+          content: Value(note.content),
+          updatedAt: Value(note.updatedAt)),
     );
   }
 

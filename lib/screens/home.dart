@@ -3,6 +3,7 @@ import 'package:notes/core/container.dart';
 import 'package:notes/screens/note_detail.dart';
 
 import '../core/database/notes.dart';
+import '../utils/last_update.dart';
 
 Future<List<SavedNote>> readDatabase() async {
   try {
@@ -191,6 +192,8 @@ class DisplayNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String lastUpdate =
+        LastUpdate(updatedAt: notesData.updatedAt).whenUpdatedAt();
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
         child: Material(
@@ -238,13 +241,26 @@ class DisplayNotes extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(
-                        notesData.title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            notesData.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            lastUpdate,
+                            style: TextStyle(
+                              color: secondaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                       Container(
                         height: 3,

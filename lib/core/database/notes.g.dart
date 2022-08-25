@@ -11,7 +11,12 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
   final int id;
   final String title;
   final String content;
-  SavedNote({required this.id, required this.title, required this.content});
+  final int updatedAt;
+  SavedNote(
+      {required this.id,
+      required this.title,
+      required this.content,
+      required this.updatedAt});
   factory SavedNote.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return SavedNote(
@@ -21,6 +26,8 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       content: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
+      updatedAt: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
     );
   }
   @override
@@ -29,6 +36,7 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
     map['content'] = Variable<String>(content);
+    map['updated_at'] = Variable<int>(updatedAt);
     return map;
   }
 
@@ -37,6 +45,7 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
       id: Value(id),
       title: Value(title),
       content: Value(content),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -47,6 +56,7 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
     );
   }
   @override
@@ -56,68 +66,84 @@ class SavedNote extends DataClass implements Insertable<SavedNote> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
+      'updatedAt': serializer.toJson<int>(updatedAt),
     };
   }
 
-  SavedNote copyWith({int? id, String? title, String? content}) => SavedNote(
+  SavedNote copyWith(
+          {int? id, String? title, String? content, int? updatedAt}) =>
+      SavedNote(
         id: id ?? this.id,
         title: title ?? this.title,
         content: content ?? this.content,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
   @override
   String toString() {
     return (StringBuffer('SavedNote(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('content: $content')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, content);
+  int get hashCode => Object.hash(id, title, content, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SavedNote &&
           other.id == this.id &&
           other.title == this.title &&
-          other.content == this.content);
+          other.content == this.content &&
+          other.updatedAt == this.updatedAt);
 }
 
 class SavedNotesCompanion extends UpdateCompanion<SavedNote> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> content;
+  final Value<int> updatedAt;
   const SavedNotesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   SavedNotesCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String content,
+    required int updatedAt,
   })  : title = Value(title),
-        content = Value(content);
+        content = Value(content),
+        updatedAt = Value(updatedAt);
   static Insertable<SavedNote> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? content,
+    Expression<int>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
   SavedNotesCompanion copyWith(
-      {Value<int>? id, Value<String>? title, Value<String>? content}) {
+      {Value<int>? id,
+      Value<String>? title,
+      Value<String>? content,
+      Value<int>? updatedAt}) {
     return SavedNotesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -133,6 +159,9 @@ class SavedNotesCompanion extends UpdateCompanion<SavedNote> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
     return map;
   }
 
@@ -141,7 +170,8 @@ class SavedNotesCompanion extends UpdateCompanion<SavedNote> {
     return (StringBuffer('SavedNotesCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('content: $content')
+          ..write('content: $content, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -170,8 +200,13 @@ class $SavedNotesTable extends SavedNotes
   late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
       'content', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
   @override
-  List<GeneratedColumn> get $columns => [id, title, content];
+  late final GeneratedColumn<int?> updatedAt = GeneratedColumn<int?>(
+      'updated_at', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, title, content, updatedAt];
   @override
   String get aliasedName => _alias ?? 'saved_notes';
   @override
@@ -195,6 +230,12 @@ class $SavedNotesTable extends SavedNotes
           content.isAcceptableOrUnknown(data['content']!, _contentMeta));
     } else if (isInserting) {
       context.missing(_contentMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }

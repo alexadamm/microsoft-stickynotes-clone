@@ -2,6 +2,7 @@ class Note {
   int? id;
   String title;
   String content;
+  int updatedAt = DateTime.now().millisecondsSinceEpoch;
 
   Note({this.id, this.title = "Title", this.content = "Content"});
 
@@ -12,6 +13,7 @@ class Note {
     }
     data['title'] = title;
     data['content'] = content;
+    data['updated_at'] = updatedAt;
     return data;
   }
 

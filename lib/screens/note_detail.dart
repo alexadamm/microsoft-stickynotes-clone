@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notes/core/container.dart';
 import 'package:notes/core/note.dart';
 
+import '../core/database/notes.dart';
+
 class NoteDetail extends StatefulWidget {
   final List args;
   const NoteDetail(this.args, {super.key});
@@ -79,6 +81,11 @@ class _NoteDetail extends State<NoteDetail> {
   }
 
   Future<int> _updateNote(Note note) async {
+    List<SavedNote> oldNote =
+        await notesQuery.getNoteById(note.id != null ? note.id! : 0);
+    if (note.title == oldNote[0].title && note.content == oldNote[0].content) {
+      note.updatedAt = oldNote[0].updatedAt;
+    }
     return await notesQuery.updateNoteById(note);
   }
 
