@@ -105,7 +105,7 @@ class _Home extends State<Home> {
           },
           child: Icon(Icons.add, color: primaryColor),
         ),
-        body: FutureBuilder(
+        body: FutureBuilder<List<SavedNote>>(
             future: readDatabase(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
