@@ -1,0 +1,3 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/build/linux/x64/debug/_deps/sqlite3-subbuild"
+}
