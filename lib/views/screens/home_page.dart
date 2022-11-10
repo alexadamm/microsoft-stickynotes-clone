@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:notes/core/container.dart';
-import 'package:notes/screens/note_detail.dart';
+import 'package:notes/models/note_detail_model.dart';
+import 'package:notes/models/notes_response_model.dart';
+import 'package:notes/views/screens/note_detail_page.dart';
+import 'package:notes/services/api_service.dart';
+import 'package:notes/services/shared_services.dart';
 
-import '../core/database/notes.dart';
-import '../utils/last_update.dart';
+import '../../utils/last_update.dart';
 
-Future<List<SavedNote>> readDatabase() async {
+Future<List<NoteDetailModel>> readDatabase() async {
   try {
-    List<SavedNote> notesList = await notesQuery.getAllNotes();
+    NotesResponseModel notesResponse = await APIService.getAllNotes();
+    List<NoteDetailModel> notesList = notesResponse.data!.notes;
     return notesList;
   } catch (e) {
     throw Error();
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  _Home createState() => _Home();
+  _HomePage createState() => _HomePage();
 }
 
-class _Home extends State<Home> {
+class _HomePage extends State<HomePage> {
   final primaryColor = const Color(0xFF202020);
   final secondaryColor = const Color.fromARGB(255, 230, 185, 4);
 
-  List<SavedNote>? notesData = [];
-  List<int> selectedNoteIds = [];
+  List<NoteDetailModel>? notesData = [];
+  List<String> selectedNoteIds = [];
 
   // Render the screen and update changes
   void afterNavigatorPop() {
@@ -34,7 +37,7 @@ class _Home extends State<Home> {
   }
 
   // Long Press handler to display bottom bar
-  void handleNoteListLongPress(int id) {
+  void handleNoteListLongPress(String id) {
     setState(() {
       if (selectedNoteIds.contains(id) == false) {
         selectedNoteIds.add(id);
@@ -43,7 +46,7 @@ class _Home extends State<Home> {
   }
 
   // Remove selection after long press
-  void handleNoteListTapAfterSelect(int id) {
+  void handleNoteListTapAfterSelect(String id) {
     setState(() {
       if (selectedNoteIds.contains(id) == true) {
         selectedNoteIds.remove(id);
@@ -54,8 +57,8 @@ class _Home extends State<Home> {
   // Delete Note/Notes
   void handleDelete() async {
     try {
-      for (int id in selectedNoteIds) {
-        await notesQuery.deleteNoteById(id);
+      for (String id in selectedNoteIds) {
+        await APIService.deleteNoteById(id);
       }
     } catch (e) {
       throw Error();
@@ -68,8 +71,9 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    bool isAPIcallProcess = false;
     return MaterialApp(
-      title: 'Super Note',
+      title: 'Sticky Notes',
       home: Scaffold(
         backgroundColor: primaryColor,
         appBar: AppBar(
@@ -82,14 +86,27 @@ class _Home extends State<Home> {
                     ),
                     tooltip: 'Delete',
                     onPressed: () => handleDelete())
-                : Container()),
+                : IconButton(
+                    icon: Icon(
+                      Icons.logout,
+                      color: secondaryColor,
+                    ),
+                    tooltip: 'Logout',
+                    onPressed: () async{
+                      await SharedService.logout(context);
+                      }))
           ],
           automaticallyImplyLeading: false,
           backgroundColor: primaryColor,
-          title: const Text('Notes App',
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/images/notes_icon.png', width: 40,              ),
+             const Text(' Sticky Notes',
               style: TextStyle(
                 color: Color.fromARGB(255, 230, 185, 4),
               )),
+          ]),
           shadowColor: Colors.transparent,
           elevation: 0,
         ),
@@ -100,12 +117,12 @@ class _Home extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const NoteDetail(['new', {}])),
+                  builder: (context) => const NoteDetailPage(['new', {}])),
             ).then((dynamic value) => afterNavigatorPop())
           },
           child: Icon(Icons.add, color: primaryColor),
         ),
-        body: FutureBuilder<List<SavedNote>>(
+        body: FutureBuilder<List<NoteDetailModel>>(
             future: readDatabase(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -141,8 +158,8 @@ class _Home extends State<Home> {
 
 // Display all notes
 class AllNoteLists extends StatelessWidget {
-  final List<SavedNote> data;
-  final List<int> selectedNoteIds;
+  final List<NoteDetailModel> data;
+  final List<String> selectedNoteIds;
   final VoidCallback afterNavigatorPop;
   final handleNoteListLongPress;
   final handleNoteListTapAfterSelect;
@@ -156,7 +173,7 @@ class AllNoteLists extends StatelessWidget {
     return ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
-          SavedNote item = data[index];
+          NoteDetailModel item = data[index];
           return DisplayNotes(
             item,
             selectedNoteIds,
@@ -174,8 +191,8 @@ class DisplayNotes extends StatelessWidget {
   final secondaryColor = const Color.fromARGB(255, 230, 185, 4);
   final tertiaryColor = const Color.fromARGB(255, 51, 51, 51);
 
-  final SavedNote notesData;
-  final List<int> selectedNoteIds;
+  final NoteDetailModel notesData;
+  final List<String> selectedNoteIds;
   final bool selectedNote;
   final VoidCallback callAfterNavigatorPop;
   final handleNoteListLongPress;
@@ -193,7 +210,7 @@ class DisplayNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String lastUpdate =
-        LastUpdate(updatedAt: notesData.updatedAt).whenUpdatedAt();
+        LastUpdate(updatedAt: DateTime.parse(notesData.updatedAt).millisecondsSinceEpoch).whenUpdatedAt();
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
         child: Material(
@@ -208,7 +225,7 @@ class DisplayNotes extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NoteDetail(['update', notesData]),
+                      builder: (context) => NoteDetailPage(['update', notesData]),
                     ),
                   ).then((dynamic value) => callAfterNavigatorPop());
                   return;

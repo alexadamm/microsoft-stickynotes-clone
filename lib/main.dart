@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:notes/screens/home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:notes/views/screens/home_page.dart';
+import 'package:notes/views/screens/login_page.dart';
+import 'package:notes/views/screens/register_page.dart';
+import 'package:notes/services/shared_services.dart';
 
-void main() {
-  runApp(const MyApp());
+Widget _defaultHome = const LoginPage();
+void main() async {
+  await dotenv.load(fileName: '.env');
+  WidgetsFlutterBinding.ensureInitialized();
+
+  bool _result = await SharedService.isLoggedIn();
+  if (_result) {
+    _defaultHome = const HomePage();
+  }
+  runApp(const ProviderScope(child: MyApp()));
 }
+
+final providerInitiaion = Provider<String>((_) => 'initialClass');
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,9 +26,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Home(),
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/': (context) => _defaultHome,
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/home': (context) => const HomePage(),
+      }
     );
   }
 }
