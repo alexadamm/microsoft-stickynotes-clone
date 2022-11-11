@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:notes/models/note_detail_model.dart';
-import 'package:notes/models/notes_response_model.dart';
-import 'package:notes/views/screens/note_detail_page.dart';
-import 'package:notes/services/api_service.dart';
-import 'package:notes/services/shared_services.dart';
+import 'package:sticky_notes_clone/models/note_detail_model.dart';
+import 'package:sticky_notes_clone/models/notes_response_model.dart';
+import 'package:sticky_notes_clone/views/screens/note_detail_page.dart';
+import 'package:sticky_notes_clone/services/api_service.dart';
+import 'package:sticky_notes_clone/services/shared_services.dart';
 
 import '../../utils/last_update.dart';
 
@@ -92,20 +92,21 @@ class _HomePage extends State<HomePage> {
                       color: secondaryColor,
                     ),
                     tooltip: 'Logout',
-                    onPressed: () async{
+                    onPressed: () async {
                       await SharedService.logout(context);
-                      }))
+                    }))
           ],
           automaticallyImplyLeading: false,
           backgroundColor: primaryColor,
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/notes_icon.png', width: 40,              ),
-             const Text(' Sticky Notes',
-              style: TextStyle(
-                color: Color.fromARGB(255, 230, 185, 4),
-              )),
+          title: Row(children: [
+            Image.asset(
+              'assets/images/notes_icon.png',
+              width: 40,
+            ),
+            const Text(' Sticky Notes',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 230, 185, 4),
+                )),
           ]),
           shadowColor: Colors.transparent,
           elevation: 0,
@@ -209,8 +210,10 @@ class DisplayNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String lastUpdate =
-        LastUpdate(updatedAt: DateTime.parse(notesData.updatedAt).millisecondsSinceEpoch).whenUpdatedAt();
+    String lastUpdate = LastUpdate(
+            updatedAt:
+                DateTime.parse(notesData.updatedAt).millisecondsSinceEpoch)
+        .whenUpdatedAt();
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
         child: Material(
@@ -225,7 +228,8 @@ class DisplayNotes extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NoteDetailPage(['update', notesData]),
+                      builder: (context) =>
+                          NoteDetailPage(['update', notesData]),
                     ),
                   ).then((dynamic value) => callAfterNavigatorPop());
                   return;

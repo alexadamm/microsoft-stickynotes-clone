@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:notes/views/screens/home_page.dart';
-import 'package:notes/views/screens/login_page.dart';
-import 'package:notes/views/screens/register_page.dart';
-import 'package:notes/services/shared_services.dart';
+import 'package:sticky_notes_clone/services/shared_services.dart';
+import 'package:sticky_notes_clone/views/screens/home_page.dart';
+import 'package:sticky_notes_clone/views/screens/login_page.dart';
+import 'package:sticky_notes_clone/views/screens/register_page.dart';
 
 Widget _defaultHome = const LoginPage();
 void main() async {
@@ -26,14 +26,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => _defaultHome,
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
-        '/home': (context) => const HomePage(),
-      }
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, routes: {
+      '/': (context) => _defaultHome,
+      '/login': (context) => const LoginPage(),
+      '/register': (context) => const RegisterPage(),
+      '/home': (context) => const HomePage(),
+    });
   }
 }

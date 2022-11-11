@@ -1,6 +1,6 @@
 {
-    "name": "notes",
-    "short_name": "notes",
+    "name": "sticky_notes_clone",
+    "short_name": "sticky_notes_clone",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

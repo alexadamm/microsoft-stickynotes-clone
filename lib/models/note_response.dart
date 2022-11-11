@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:notes/models/note_detail_model.dart';
+import 'package:sticky_notes_clone/models/note_detail_model.dart';
 
 NoteResponseModel noteResponseModel(String str) =>
-  NoteResponseModel.fromJson(json.decode(str));
+    NoteResponseModel.fromJson(json.decode(str));
 
 class NoteResponseModel {
   NoteResponseModel({
@@ -16,14 +16,14 @@ class NoteResponseModel {
   late final String message;
   Data? data;
   List<String>? errors;
-  
-  NoteResponseModel.fromJson(Map<String, dynamic> json){
+
+  NoteResponseModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['data'] != null) {
-    message = json['message'];
+      message = json['message'];
       data = Data.fromJson(json['data']);
     }
-    if (json['errors']!= null) {
+    if (json['errors'] != null) {
       errors = List.castFrom<dynamic, String>(json['errors']);
     }
   }
@@ -39,15 +39,11 @@ class NoteResponseModel {
 }
 
 class Data {
-  Data({
-    this.addedNote,
-    this.note
-  });
+  Data({this.addedNote, this.note});
   NoteDetailModel? addedNote;
   NoteDetailModel? note;
 
-  
-  Data.fromJson(Map<String, dynamic> json){
+  Data.fromJson(Map<String, dynamic> json) {
     if (json['addedNote'] != null) {
       addedNote = NoteDetailModel.fromJson(json['addedNote']);
     }

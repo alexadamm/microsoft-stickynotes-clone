@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:notes/models/add_note_request.dart';
-import 'package:notes/models/note_response.dart';
-import 'package:notes/services/api_service.dart';
-import 'package:notes/views/widgets/note_content_entry.dart';
-import 'package:notes/views/widgets/note_title_entry.dart';
-
+import 'package:sticky_notes_clone/models/add_note_request.dart';
+import 'package:sticky_notes_clone/models/note_response.dart';
+import 'package:sticky_notes_clone/services/api_service.dart';
+import 'package:sticky_notes_clone/views/widgets/note_content_entry.dart';
+import 'package:sticky_notes_clone/views/widgets/note_title_entry.dart';
 
 class NoteDetailPage extends StatefulWidget {
   final List args;
@@ -48,7 +47,7 @@ class _NoteDetailPage extends State<NoteDetailPage> {
     }
 
     if (content.isEmpty) {
-        setState(() {
+      setState(() {
         content = ' ';
       });
     }
@@ -91,8 +90,8 @@ class _NoteDetailPage extends State<NoteDetailPage> {
   Future<NoteResponseModel?> _updateNote(AddNoteRequest note) async {
     NoteResponseModel oldNote = await APIService.getNoteById(note.id!);
     if (note.title == oldNote.data!.note!.title &&
-      note.content == oldNote.data!.note!.content) {
-        return null;
+        note.content == oldNote.data!.note!.content) {
+      return null;
     }
     return await APIService.updateNoteById(note.id!, note);
   }
@@ -104,9 +103,13 @@ class _NoteDetailPage extends State<NoteDetailPage> {
     content = (widget.args[0] == 'new' ? '' : widget.args[1].content);
 
     _titleTextController.text =
-        (widget.args[0] == 'new' || widget.args[1].title == 'Untitled' ? '' : widget.args[1].title);
+        (widget.args[0] == 'new' || widget.args[1].title == 'Untitled'
+            ? ''
+            : widget.args[1].title);
     _contentTextController.text =
-        ((widget.args[0] == 'new' ||  widget.args[1].content == ' ' ) ? '' : widget.args[1].content);
+        ((widget.args[0] == 'new' || widget.args[1].content == ' ')
+            ? ''
+            : widget.args[1].content);
     _titleTextController.addListener(handleTitleTextChange);
     _contentTextController.addListener(handleContentTextChange);
   }

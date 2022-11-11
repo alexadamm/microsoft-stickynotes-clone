@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/config.dart';
-import 'package:notes/models/register_request_model.dart';
-import 'package:notes/services/api_service.dart';
-import 'package:notes/utils/form_helper.dart';
-import 'package:notes/views/widgets/logo_space.dart';
+import 'package:sticky_notes_clone/config.dart';
+import 'package:sticky_notes_clone/models/register_request_model.dart';
+import 'package:sticky_notes_clone/services/api_service.dart';
+import 'package:sticky_notes_clone/utils/form_helper.dart';
+import 'package:sticky_notes_clone/views/widgets/logo_space.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -43,36 +43,29 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registerUI(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const LogoSpace(),
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 25,
-              bottom: 30,
-              top: 50
-            ),
-            child: Text("Register", style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: Color.fromARGB(255, 230, 185, 4),
-            )),
-          ),
-          FormHelper.inputFieldWidget(
-            context,
-            "fullname",
-            "Fullname",
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const LogoSpace(),
+        const Padding(
+          padding: EdgeInsets.only(left: 25, bottom: 30, top: 50),
+          child: Text("Register",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Color.fromARGB(255, 230, 185, 4),
+              )),
+        ),
+        FormHelper.inputFieldWidget(context, "fullname", "Fullname",
             (onValidateVal) {
-              if (onValidateVal!.isEmpty) {
-                return "Fullname is required";
-              }
-              return null;
-            },
-            (onSavedVal) {
-              fullname = onSavedVal;
-            },
+          if (onValidateVal!.isEmpty) {
+            return "Fullname is required";
+          }
+          return null;
+        }, (onSavedVal) {
+          fullname = onSavedVal;
+        },
             prefixIcon: const Icon(Icons.person_outline),
             borderFocusColor: const Color.fromARGB(255, 230, 185, 4),
             borderColor: Colors.white.withOpacity(0.5),
@@ -80,23 +73,18 @@ class _RegisterPageState extends State<RegisterPage> {
             showPrefixIcon: true,
             textColor: Colors.white,
             hintColor: Colors.white.withOpacity(0.5),
-            borderRadius: 20
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: FormHelper.inputFieldWidget(
-              context,
-              "username",
-              "Username",
+            borderRadius: 20),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: FormHelper.inputFieldWidget(context, "username", "Username",
               (onValidateVal) {
-                if (onValidateVal!.isEmpty) {
-                  return "Username is required";
-                }
-                return null;
-              },
-              (onSavedVal) {
-                username = onSavedVal;
-              },
+            if (onValidateVal!.isEmpty) {
+              return "Username is required";
+            }
+            return null;
+          }, (onSavedVal) {
+            username = onSavedVal;
+          },
               prefixIcon: const Icon(Icons.person),
               borderFocusColor: const Color.fromARGB(255, 230, 185, 4),
               borderColor: Colors.white.withOpacity(0.5),
@@ -104,24 +92,19 @@ class _RegisterPageState extends State<RegisterPage> {
               showPrefixIcon: true,
               textColor: Colors.white,
               hintColor: Colors.white.withOpacity(0.5),
-              borderRadius: 20
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: FormHelper.inputFieldWidget(
-              context,
-              "password",
-              "Password",
+              borderRadius: 20),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: FormHelper.inputFieldWidget(context, "password", "Password",
               (onValidateVal) {
-                if (onValidateVal!.isEmpty) {
-                  return "Password is required";
-                }
-                return null;
-              },
-              (onSavedVal) {
-                password = onSavedVal;
-              },
+            if (onValidateVal!.isEmpty) {
+              return "Password is required";
+            }
+            return null;
+          }, (onSavedVal) {
+            password = onSavedVal;
+          },
               prefixIcon: const Icon(Icons.key_rounded),
               borderFocusColor: const Color.fromARGB(255, 230, 185, 4),
               borderColor: Colors.white.withOpacity(0.5),
@@ -132,33 +115,28 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: hidePassword,
               borderRadius: 20,
               suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    hidePassword = !hidePassword;
-                  });
-                },
-                icon: Icon(
-                  hidePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.white.withOpacity(0.5),
-                ))
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: FormHelper.inputFieldWidget(
-              context,
-              "confirm password",
-              "Confirm Password",
-              (onValidateVal) {
-                if (onValidateVal!.isEmpty) {
-                  return "Confirm Password is required";
-                }     
+                  onPressed: () {
+                    setState(() {
+                      hidePassword = !hidePassword;
+                    });
+                  },
+                  icon: Icon(
+                    hidePassword ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white.withOpacity(0.5),
+                  ))),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: FormHelper.inputFieldWidget(
+              context, "confirm password", "Confirm Password", (onValidateVal) {
+            if (onValidateVal!.isEmpty) {
+              return "Confirm Password is required";
+            }
 
-                return null;
-              },
-              (onSavedVal) {
-                confirmPassword = onSavedVal;
-              },
+            return null;
+          }, (onSavedVal) {
+            confirmPassword = onSavedVal;
+          },
               prefixIcon: const Icon(Icons.key_outlined),
               borderFocusColor: const Color.fromARGB(255, 230, 185, 4),
               borderColor: Colors.white.withOpacity(0.5),
@@ -169,122 +147,107 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: hidePassword,
               borderRadius: 20,
               suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    hidePassword = !hidePassword;
-                  });
-                },
-                icon: Icon(
-                  hidePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.white.withOpacity(0.5),
-                ))
-            ),
-          ),
-          const SizedBox( height:  20),
-          Center(
-            child: FormHelper.submitButton(
-              "Register",
-              () {
-                var validated = validateAndSave();
-                if (password != confirmPassword ){
-                  return FormHelper.showSimpleAlertDialog(
-                        context,
-                        'Registration Failed',
-                        'password and confirm password are not the same',
-                        "OK",
-                        () {
-                          Navigator.pop(context);
-                        }
-                      );
-                }
-                if(validated) {
-                  setState(() {
-                    isAPIcallProcess = true;
-                  });
-
-                  RegisterRequestModel model = RegisterRequestModel(
-                    username: username!,
-                    password: password!,
-                    fullname: fullname!,
-                  );
-
-                  APIService.register(model).then((response) {
+                  onPressed: () {
                     setState(() {
-                      isAPIcallProcess = false;
+                      hidePassword = !hidePassword;
                     });
-                    if(response.data != null) {
-                      FormHelper.showSimpleAlertDialog(
+                  },
+                  icon: Icon(
+                    hidePassword ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white.withOpacity(0.5),
+                  ))),
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: FormHelper.submitButton(
+            "Register",
+            () {
+              var validated = validateAndSave();
+              if (password != confirmPassword) {
+                return FormHelper.showSimpleAlertDialog(
+                    context,
+                    'Registration Failed',
+                    'password and confirm password are not the same',
+                    "OK", () {
+                  Navigator.pop(context);
+                });
+              }
+              if (validated) {
+                setState(() {
+                  isAPIcallProcess = true;
+                });
+
+                RegisterRequestModel model = RegisterRequestModel(
+                  username: username!,
+                  password: password!,
+                  fullname: fullname!,
+                );
+
+                APIService.register(model).then((response) {
+                  setState(() {
+                    isAPIcallProcess = false;
+                  });
+                  if (response.data != null) {
+                    FormHelper.showSimpleAlertDialog(
                         context,
                         "Registration Success",
                         "Please login to the account ",
-                        "OK",
-                        () {
-                          Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/login',
-                          (route) => false
-                          );
-                        }
-                      );
-                    } else {
-                      FormHelper.showSimpleAlertDialog(
-                        context,
-                        Config.appName,
-                        response.errors![0],
-                        "OK",
-                        () {
-                          Navigator.pop(context);
-                        }
-                      );
-                    }
-                  });
-                }
-              },
-              btnColor: Colors.white.withOpacity(0),
-              borderColor: const Color.fromARGB(255, 230, 185, 4),
-              borderRadius: 20,
-              txtColor: const Color.fromARGB(255, 230, 185, 4),
-              ),
-          ),
-          const SizedBox( height:  20),
-          Center(
-            child: RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 230, 185, 4),
-                  fontSize: 14,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: "Have an account? ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withOpacity(0.5),
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'Login',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color.fromARGB(255, 230, 185, 4),
-                      decoration: TextDecoration.underline,
-                    ),
-                    recognizer: TapGestureRecognizer()..onTap = () {
+                        "OK", () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (route) => false);
+                    });
+                  } else {
+                    FormHelper.showSimpleAlertDialog(
+                        context, Config.appName, response.errors![0], "OK", () {
                       Navigator.pop(context);
-                    }
-                  )
-                ],
-              )
-            ),
+                    });
+                  }
+                });
+              }
+            },
+            btnColor: Colors.white.withOpacity(0),
+            borderColor: const Color.fromARGB(255, 230, 185, 4),
+            borderRadius: 20,
+            txtColor: const Color.fromARGB(255, 230, 185, 4),
           ),
-        ],
-      )
-    );
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: RichText(
+              text: TextSpan(
+            style: const TextStyle(
+              color: Color.fromARGB(255, 230, 185, 4),
+              fontSize: 14,
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: "Have an account? ",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              ),
+              TextSpan(
+                  text: 'Login',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 230, 185, 4),
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.pop(context);
+                    })
+            ],
+          )),
+        ),
+      ],
+    ));
   }
 
   bool validateAndSave() {
     final form = globalFormKey.currentState;
-    if(form!.validate()) {
+    if (form!.validate()) {
       form.save();
       return true;
     }

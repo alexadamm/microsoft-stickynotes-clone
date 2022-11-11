@@ -1,6 +1,6 @@
-# notes
+# Sticky Notes Clone
 
-A new Flutter project.
+Microsoft's sticky notes clone..
 
 ## Getting Started
 
@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## About this app
+
+This app using this [Back-End Service](https://api.rulim34.dev/api/v2) that deployed on virtual computer.
+You can see the Back-End Service repository [here](https://github.com/alexadamm/collaborative-notes-api).

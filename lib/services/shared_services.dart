@@ -2,16 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:notes/models/login_response_model.dart';
-import 'package:notes/services/api_service.dart';
+import 'package:sticky_notes_clone/models/login_response_model.dart';
+import 'package:sticky_notes_clone/services/api_service.dart';
 
 class SharedService {
   static Future<bool> isLoggedIn() async {
     const secureStorage = FlutterSecureStorage();
-    var cacheData =
-      await secureStorage.read(key: "login_details");
+    var cacheData = await secureStorage.read(key: "login_details");
 
-    return (cacheData != null)? true : false;
+    return (cacheData != null) ? true : false;
   }
 
   static Future<LoginResponseModel?> loginDetails() async {
@@ -23,7 +22,7 @@ class SharedService {
     }
     return null;
   }
-  
+
   static Future<void> setLoginDetails(LoginResponseModel model) async {
     const secureStorage = FlutterSecureStorage();
     var dataJson = jsonEncode(model.toJson());
