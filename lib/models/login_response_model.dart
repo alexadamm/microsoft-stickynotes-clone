@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:sticky_notes_clone/models/auth_detail_model.dart';
+
 LoginResponseModel loginResponseJson(String str) =>
-  LoginResponseModel.fromJson(json.decode(str));
+    LoginResponseModel.fromJson(json.decode(str));
 
 class LoginResponseModel {
   LoginResponseModel({
@@ -12,18 +14,19 @@ class LoginResponseModel {
   });
   late final bool isSuccess;
   late final String message;
-  Data? data;
+  AuthDetailModel? data;
   List<String>? errors;
-  
-  LoginResponseModel.fromJson(Map<String, dynamic> json){
+
+  LoginResponseModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['data'] != null) {
       message = json['message'];
-      data = Data.fromJson(json['data']);
+      data = AuthDetailModel.fromJson(json['data']);
     }
-    if (json['errors']!= null) {
+    if (json['errors'] != null) {
       errors = List.castFrom<dynamic, String>(json['errors']);
-    };
+    }
+    ;
   }
 
   Map<String, dynamic> toJson() {
@@ -32,27 +35,6 @@ class LoginResponseModel {
     _data['message'] = message;
     _data['data'] = data!.toJson();
     _data['errors'] = errors;
-    return _data;
-  }
-}
-
-class Data {
-  Data({
-    required this.accessToken,
-    required this.refreshToken,
-  });
-  late final String accessToken;
-  late final String refreshToken;
-  
-  Data.fromJson(Map<String, dynamic> json){
-    accessToken = json['accessToken'];
-    refreshToken = json['refreshToken'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['accessToken'] = accessToken;
-    _data['refreshToken'] = refreshToken;
     return _data;
   }
 }

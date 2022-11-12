@@ -4,7 +4,7 @@ String rootEndpoint = dotenv.get('API_ROOT_ENDPOINT');
 
 class Config {
   static String appName = "Microsoft's Sticky Notes";
-  static String regisAPI = "$rootEndpoint/users";
-  static String authAPI = "$rootEndpoint/authentications";
-  static String notesAPI = "$rootEndpoint/notes";
+  static String regisAPI = "${rootEndpoint}users";
+  static String authAPI = "${rootEndpoint}authentications";
+  static String notesAPI = "${rootEndpoint}notes";
 }
